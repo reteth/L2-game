@@ -6,7 +6,7 @@
         var canvas, canvasContext;
 
         //player vars and consts
-        const PLAYER_SIZE = 30;
+        const PLAYER_SIZE = 100;
         var playerXpos = 0;
         var playerYpos = 0;
         var playerXspeed = 5;
@@ -24,6 +24,11 @@
         const DOWN_KEY = 83;
         const UP_KEY = 87;
 
+        //player array and sprite
+        var player = new Image();
+        player.src = "sprites/player1.jfif";
+        
+
         window.onload = function () {
             canvas = document.getElementById('gameCanvas');
             canvasContext = canvas.getContext('2d');
@@ -37,11 +42,17 @@
 
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
-            colorRect(playerXpos, playerYpos, PLAYER_SIZE, PLAYER_SIZE, 'red'); //red
+            drawImg(player, playerXpos, playerYpos, PLAYER_SIZE, PLAYER_SIZE); //red
             playerMove();
 
         }
 
+        function drawImg(src,x,y,w,h){
+canvasContext.drawImage(src,x,y,w,h);
+        }
+
+
+        //makes player move when the corusponding key is pressed
         function keyPressed(evt){
             if(evt.keyCode == LEFT_KEY){
                 leftKeyPress = true;
@@ -56,7 +67,7 @@
                 downKeyPress = true;
             }
         }
-
+        //makes player stop when key is released
         function keyReleased(evt){
             if(evt.keyCode == LEFT_KEY){
                 leftKeyPress = false;
@@ -77,6 +88,7 @@
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x, y, w, h);
         }
+
         //makes player move
         function playerMove() {
           if(leftKeyPress && playerXpos > 0){
@@ -94,3 +106,5 @@
         }
     </script>
 </body>
+
+
