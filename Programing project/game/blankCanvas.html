@@ -1,0 +1,137 @@
+<!doctype html>
+
+<body>
+    <canvas id="gameCanvas" width="1500" height="800"></canvas>
+    <script>
+        var canvas, canvasContext;
+
+        //player vars and consts
+        const PLAYER_SIZE = 250;
+        var playerXpos = 0;
+        var playerYpos = 0;
+        var playerXspeed = 5;
+        var playerYspeed = 5;
+
+        //enemy vars and consts
+        const ENEMY_SIZE = 50;
+        var enemyXpos = 0;
+        var enemyYpos = 0;
+        var enemyXspeed = 5;
+        var enemyYspeed = 5;
+
+
+
+        var leftKeyPress = false;
+        var rightKeyPress = false;
+        var downKeyPress = false;
+        var upKeyPress = false;
+
+        const LEFT_KEY = 65;
+        const RIGHT_KEY = 68;
+        const DOWN_KEY = 83;
+        const UP_KEY = 87;
+
+        const BULLET_SIZE = 30;
+        var bulletXpos = playerXpos + BULLET_SIZE;
+        var bulletYpos = playerYpos + BULLET_SIZE;
+
+        //player array and sprite
+        var player = new Image();
+        player.src = "sprites/player1.png";
+
+        //bullet sprite
+        var bullet = new Image();
+        bullet.src = "sprites/bullet1.png";
+
+
+        window.onload = function () {
+            canvas = document.getElementById('gameCanvas');
+            canvasContext = canvas.getContext('2d');
+
+            document.addEventListener('keydown', keyPressed);
+            document.addEventListener('keyup', keyReleased);
+
+            setInterval(mainloop, 1000 / 50);
+        }
+
+
+        function mainloop() {
+            colorRect(0, 0, canvas.width, canvas.height, 'darkblue'); // bg
+            colorRect(enemyXpos, enemyYpos, ENEMY_SIZE , ENEMY_SIZE, 'red'); //enemy draw
+            drawImg(player, playerXpos, playerYpos, PLAYER_SIZE, PLAYER_SIZE);
+            playerMove();
+            enemyMove();
+
+        }
+
+        function drawImg(src, x, y, w, h) {
+            canvasContext.drawImage(src, x, y, w, h);
+        }
+
+
+
+
+        //makes player move when the corusponding key is pressed
+        function keyPressed(evt) {
+            if (evt.keyCode == LEFT_KEY) {
+                leftKeyPress = true;
+            }
+            if (evt.keyCode == RIGHT_KEY) {
+                rightKeyPress = true;
+            }
+            if (evt.keyCode == UP_KEY) {
+                upKeyPress = true;
+            }
+            if (evt.keyCode == DOWN_KEY) {
+                downKeyPress = true;
+            }
+        }
+        //makes player stop when key is released
+        function keyReleased(evt) {
+            if (evt.keyCode == LEFT_KEY) {
+                leftKeyPress = false;
+            }
+            if (evt.keyCode == RIGHT_KEY) {
+                rightKeyPress = false;
+            }
+            if (evt.keyCode == UP_KEY) {
+                upKeyPress = false;
+            }
+            if (evt.keyCode == DOWN_KEY) {
+                downKeyPress = false;
+            }
+        }
+
+
+        function colorRect(x, y, w, h, c) {
+            canvasContext.fillStyle = c;
+            canvasContext.fillRect(x, y, w, h);
+        }
+
+        //makes player move
+        function playerMove() {
+            if (leftKeyPress && playerXpos > 0) {
+                playerXpos -= playerXspeed;
+            }
+            if (rightKeyPress && playerXpos < canvas.width - PLAYER_SIZE) {
+                playerXpos += playerXspeed;
+            }
+            if (upKeyPress && playerYpos > 0) {
+                playerYpos -= playerYspeed;
+            }
+            if (downKeyPress && playerYpos < canvas.height - PLAYER_SIZE) {
+                playerYpos += playerYspeed;
+            }
+        }
+
+
+        function enemyMove() {
+            if ( enemyYpos > 0) {
+                enemyYpos -= enemyYspeed;
+            }
+            if ( enemyYpos < canvas.height - PLAYER_SIZE) {
+                enemyYpos += enemyYspeed;
+            }
+        }
+    </script>
+</body>
