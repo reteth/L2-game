@@ -27,14 +27,21 @@
         var downKeyPress = false;
         var upKeyPress = false;
 
+        //Make player shoot bullet
+        var shootKeyPressed = false;
+
         const LEFT_KEY = 65;
         const RIGHT_KEY = 68;
         const DOWN_KEY = 83;
         const UP_KEY = 87;
+        const SHOOT_KEY = 32;
 
+
+        //bullet vars
         const BULLET_SIZE = 30;
         var bulletXpos = playerXpos + BULLET_SIZE;
         var bulletYpos = playerYpos + BULLET_SIZE;
+        var bulletXspeed = 30;
 
         //player array and sprite
         var player = new Image();
@@ -43,6 +50,12 @@
         //bullet sprite
         var bullet = new Image();
         bullet.src = "sprites/bullet1.png";
+
+
+        //enemy array and sprite
+        var enemies = [];
+        var enemy = new Image();
+        enemy.src = "sprites/bullet1.png";
 
 
         window.onload = function () {
@@ -58,16 +71,23 @@
 
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'darkblue'); // bg
-            colorRect(enemyXpos, enemyYpos, ENEMY_SIZE , ENEMY_SIZE, 'red'); //enemy draw
             drawImg(player, playerXpos, playerYpos, PLAYER_WIDTH, PLAYER_HEIGHT);
+            drawImg(bullet, bulletXpos, bulletYpos, BULLET_SIZE, BULLET_SIZE);
             playerMove();
-            enemyMove();
+            shoot();
+            drawEnemy();
 
         }
 
         function drawImg(src, x, y, w, h) {
             canvasContext.drawImage(src, x, y, w, h);
         }
+
+        function drawEnemy() {
+            enemies.forEach(function(e, i, array) {
+             drawImg(enemy,e.enemyXpos,e.enemyYpos,e.ENEMY_SIZE,e.ENEMY_SIZE);
+            });
+        }//end func drawEnemy
 
 
 
@@ -86,6 +106,9 @@
             if (evt.keyCode == DOWN_KEY) {
                 downKeyPress = true;
             }
+            if (evt.keyCode == SHOOT_KEY) {
+                shootKeyPressed = true;
+            }
         }
         //makes player stop when key is released
         function keyReleased(evt) {
@@ -101,6 +124,10 @@
             if (evt.keyCode == DOWN_KEY) {
                 downKeyPress = false;
             }
+            if (evt.keyCode == SHOOT_KEY) {
+                shootKeyPressed = false;
+            }
+
         }
 
 
@@ -114,7 +141,7 @@
             if (leftKeyPress && playerXpos > 0) {
                 playerXpos -= playerXspeed;
             }
-            if (rightKeyPress && playerXpos < canvas.width - PLAYER_WIDTH)  {
+            if (rightKeyPress && playerXpos < canvas.width - PLAYER_WIDTH) {
                 playerXpos += playerXspeed;
             }
             if (upKeyPress && playerYpos > 0) {
@@ -125,17 +152,22 @@
             }
         }
 
-        //makes enemy move 
-        function enemyMove() {
-            enemyYpos += enemyYspeed;
+        
 
-            if(enemyYpos > canvas.height){
-                enemyYpos = 0 - ENEMY_SIZE;
-                enemyYspeed = math.floor(math.random()*(12 - 4) + 4);
+
+
+        
+        //makes player shoot bullet
+        function shoot() {   
+
+               bulletXpos += bulletXspeed
+
+            if (shootKeyPressed) {
+                bulletYpos = playerYpos 
             }
-
-            
-           
+            if (shootKeyPressed) {
+                bulletXpos  = playerXpos + PLAYER_WIDTH
+            }
         }
     </script>
 </body>
