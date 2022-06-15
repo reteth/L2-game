@@ -20,8 +20,6 @@
         var enemyXspeed = 5;
         var enemyYspeed = 5;
 
-
-
         var leftKeyPress = false;
         var rightKeyPress = false;
         var downKeyPress = false;
@@ -46,7 +44,6 @@
         //player array and sprite
         var player = new Image();
         player.src = "sprites/player1.png";
-
         //bullet sprite
         var bullet = new Image();
         bullet.src = "sprites/bullet1.png";
@@ -61,21 +58,20 @@
         window.onload = function () {
             canvas = document.getElementById('gameCanvas');
             canvasContext = canvas.getContext('2d');
-
             document.addEventListener('keydown', keyPressed);
             document.addEventListener('keyup', keyReleased);
-
             setInterval(mainloop, 1000 / 50);
         }
 
-
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'darkblue'); // bg
+            colorRect(enemyXpos, enemyYpos, ENEMY_SIZE, ENEMY_SIZE, 'red'); //enemy draw
             drawImg(player, playerXpos, playerYpos, PLAYER_WIDTH, PLAYER_HEIGHT);
             drawImg(bullet, bulletXpos, bulletYpos, BULLET_SIZE, BULLET_SIZE);
             playerMove();
+            enemyMove();
             shoot();
-            drawEnemy();
+            
 
         }
 
@@ -83,12 +79,7 @@
             canvasContext.drawImage(src, x, y, w, h);
         }
 
-        function drawEnemy() {
-            enemies.forEach(function(e, i, array) {
-             drawImg(enemy,e.enemyXpos,e.enemyYpos,e.ENEMY_SIZE,e.ENEMY_SIZE);
-            });
-        }//end func drawEnemy
-
+       
 
 
 
@@ -135,39 +126,50 @@
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x, y, w, h);
         }
-
         //makes player move
         function playerMove() {
             if (leftKeyPress && playerXpos > 0) {
                 playerXpos -= playerXspeed;
             }
+           
             if (rightKeyPress && playerXpos < canvas.width - PLAYER_WIDTH) {
-                playerXpos += playerXspeed;
+                    playerXpos += playerXspeed;
+                }
+             if (upKeyPress && playerYpos > 0) {
+                    playerYpos -= playerYspeed;
+                }
+             if (downKeyPress && playerYpos < canvas.height - PLAYER_HEIGHT) {
+                    playerYpos += playerYspeed;
+                }
             }
-            if (upKeyPress && playerYpos > 0) {
-                playerYpos -= playerYspeed;
-            }
-            if (downKeyPress && playerYpos < canvas.height - PLAYER_HEIGHT) {
-                playerYpos += playerYspeed;
-            }
-        }
-
         
 
+            //makes enemy move 
+            function enemyMove() {
+                enemyYpos += enemyYspeed;
 
-
-        
-        //makes player shoot bullet
-        function shoot() {   
-
-               bulletXpos += bulletXspeed
-
-            if (shootKeyPressed) {
-                bulletYpos = playerYpos 
+                if (enemyYpos > canvas.height) {
+                    enemyYpos = 0 - ENEMY_SIZE;
+                    
+                }
             }
-            if (shootKeyPressed) {
-                bulletXpos  = playerXpos + PLAYER_WIDTH
+            
+
+
+
+
+
+            //makes player shoot bullet
+            function shoot() {
+
+                bulletXpos += bulletXspeed
+
+                if (shootKeyPressed) {
+                    bulletYpos = playerYpos
+                }
+                if (shootKeyPressed) {
+                    bulletXpos = playerXpos + PLAYER_WIDTH
+                }
             }
-        }
     </script>
 </body>
