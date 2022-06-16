@@ -20,6 +20,7 @@
         var enemyXspeed = 5;
         var enemyYspeed = 5;
 
+        //tells canvas that key is no longer pressed
         var leftKeyPress = false;
         var rightKeyPress = false;
         var downKeyPress = false;
@@ -28,6 +29,7 @@
         //Make player shoot bullet
         var shootKeyPressed = false;
 
+        //keybinds
         const LEFT_KEY = 65;
         const RIGHT_KEY = 68;
         const DOWN_KEY = 83;
@@ -63,6 +65,8 @@
             setInterval(mainloop, 1000 / 50);
         }
 
+
+        //add all functions here!
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'darkblue'); // bg
             colorRect(enemyXpos, enemyYpos, ENEMY_SIZE, ENEMY_SIZE, 'red'); //enemy draw
@@ -71,7 +75,7 @@
             playerMove();
             enemyMove();
             shoot();
-            
+
 
         }
 
@@ -79,7 +83,7 @@
             canvasContext.drawImage(src, x, y, w, h);
         }
 
-       
+
 
 
 
@@ -126,50 +130,48 @@
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x, y, w, h);
         }
+        
         //makes player move
         function playerMove() {
             if (leftKeyPress && playerXpos > 0) {
                 playerXpos -= playerXspeed;
             }
-           
+
             if (rightKeyPress && playerXpos < canvas.width - PLAYER_WIDTH) {
-                    playerXpos += playerXspeed;
-                }
-             if (upKeyPress && playerYpos > 0) {
-                    playerYpos -= playerYspeed;
-                }
-             if (downKeyPress && playerYpos < canvas.height - PLAYER_HEIGHT) {
-                    playerYpos += playerYspeed;
-                }
+                playerXpos += playerXspeed;
             }
-        
-
-            //makes enemy move 
-            function enemyMove() {
-                enemyYpos += enemyYspeed;
-
-                if (enemyYpos > canvas.height) {
-                    enemyYpos = 0 - ENEMY_SIZE;
-                    
-                }
+            if (upKeyPress && playerYpos > 0) {
+                playerYpos -= playerYspeed;
             }
-            
-
-
-
-
-
-            //makes player shoot bullet
-            function shoot() {
-
-                bulletXpos += bulletXspeed
-
-                if (shootKeyPressed) {
-                    bulletYpos = playerYpos
-                }
-                if (shootKeyPressed) {
-                    bulletXpos = playerXpos + PLAYER_WIDTH
-                }
+            if (downKeyPress && playerYpos < canvas.height - PLAYER_HEIGHT) {
+                playerYpos += playerYspeed;
             }
+        }
+
+
+        //makes enemy move 
+        function enemyMove() {
+            enemyYpos += enemyYspeed;
+
+            if (enemyYpos > canvas.height) {
+                enemyYpos = 0 - ENEMY_SIZE;
+
+            }
+        }
+
+
+
+        //makes player shoot bullet
+        function shoot() {
+
+            bulletXpos += bulletXspeed
+
+            if (shootKeyPressed) {
+                bulletYpos = playerYpos
+            }
+            if (shootKeyPressed) {
+                bulletXpos = playerXpos + PLAYER_WIDTH
+            }
+        }
     </script>
 </body>
