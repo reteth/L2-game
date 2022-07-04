@@ -75,6 +75,8 @@
             playerMove();
             enemyMove();
             shoot();
+            enemyDie();
+            
 
 
         }
@@ -160,9 +162,11 @@
         }
 
 
-
+        
         //makes player shoot bullet
-        function shoot() {
+
+
+        function shoot(){
 
             bulletXpos += bulletXspeed
 
@@ -173,5 +177,15 @@
                 bulletXpos = playerXpos + PLAYER_WIDTH
             }
         }
+    
+       //makes enemy die
+       function enemyDie(){
+          if( bulletYpos && bulletXpos == enemyXpos && enemyYpos){
+              alert("win")
+          }
+       }
+    
+
+
     </script>
 </body>
