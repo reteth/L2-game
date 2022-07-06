@@ -176,8 +176,8 @@
 
 
         function shoot(){
-
             bulletXpos += bulletXspeed
+          if(bulletXpos > 1500){
 
             if (shootKeyPressed) {
                 bulletYpos = playerYpos
@@ -186,10 +186,11 @@
                 bulletXpos = playerXpos + PLAYER_WIDTH
             }
         }
+    }
     
        //makes enemy die
        function enemyDie(){    
-          if(enemyXpos == bulletXpos){
+          if(bulletXpos == enemyXpos && enemyYpos ){
               alert("win")
           }
        }
@@ -197,6 +198,10 @@
        //enemyShoot
         function enemyShoot(){
             ebulletXpos -= ebulletXspeed
+            if(ebulletXpos < 0 ){
+                ebulletXpos = enemyXpos
+                ebulletYpos = enemyYpos
+            }
         }
     </script>
 </body>
