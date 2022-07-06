@@ -10,8 +10,8 @@
         const PLAYER_HEIGHT = 50;
         var playerXpos = 0;
         var playerYpos = 0;
-        var playerXspeed = 5;
-        var playerYspeed = 5;
+        var playerXspeed = 10;
+        var playerYspeed = 10;
 
         //enemy vars and consts
         const ENEMY_SIZE = 50;
@@ -43,18 +43,26 @@
         var bulletYpos = playerYpos + BULLET_SIZE;
         var bulletXspeed = 30;
 
+        //ebullet vars
+        const EBULLET_SIZE = 30;
+        var ebulletXpos = enemyXpos + ENEMY_SIZE;
+        var ebulletYpos = enemyYpos + ENEMY_SIZE;
+        var ebulletXspeed = 30;
+
         //player array and sprite
         var player = new Image();
         player.src = "sprites/player1.png";
+
         //bullet sprite
         var bullet = new Image();
         bullet.src = "sprites/bullet1.png";
 
+        //ebullet sprite
+        var ebullet = new Image();
+        ebullet.src = "sprites/enemybullet1.png";
 
-        //enemy array and sprite
-        var enemies = [];
-        var enemy = new Image();
-        enemy.src = "sprites/bullet1.png";
+
+         
 
 
         window.onload = function () {
@@ -69,14 +77,15 @@
         //add all functions here!
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'darkblue'); // bg
-            colorRect(enemyXpos, enemyYpos, ENEMY_SIZE, ENEMY_SIZE, 'red'); //enemy draw
+            colorRect(enemyXpos, enemyYpos, ENEMY_SIZE, ENEMY_SIZE, 'red'); //enemy draw  
             drawImg(player, playerXpos, playerYpos, PLAYER_WIDTH, PLAYER_HEIGHT);
             drawImg(bullet, bulletXpos, bulletYpos, BULLET_SIZE, BULLET_SIZE);
-            playerMove();
-            enemyMove();
+            drawImg(ebullet, ebulletXpos, ebulletYpos, EBULLET_SIZE, EBULLET_SIZE);
             shoot();
             enemyDie();
-            
+            enemyMove();  
+            playerMove();
+            enemyShoot();
 
 
         }
@@ -179,13 +188,15 @@
         }
     
        //makes enemy die
-       function enemyDie(){
-          if( bulletYpos && bulletXpos == enemyXpos && enemyYpos){
+       function enemyDie(){    
+          if(enemyXpos == bulletXpos){
               alert("win")
           }
        }
-    
 
-
+       //enemyShoot
+        function enemyShoot(){
+            ebulletXpos -= ebulletXspeed
+        }
     </script>
 </body>
