@@ -1,0 +1,248 @@
+<!doctype html>
+
+<body>
+    <canvas id="gameCanvas" width="900" height="600"></canvas>
+    <script>
+        var canvas, canvasContext;
+
+        window.onload = function() {
+            canvas = document.getElementById('gameCanvas');
+            canvasContext = canvas.getContext('2d');
+
+            document.addEventListener('keydown', keyPressed);
+            document.addEventListener('keyup', keyReleased);
+
+            setInterval(mainloop, 1000 / 50);
+        }
+        
+        
+        
+        var userName = '';
+        while(userName == '' || userName == null){
+              userName = prompt('whats your name?') 
+        }
+        
+        
+       
+        
+        //player vars
+        var playerXpos = 200;
+        var playerYpos = 370;
+        var playerXspeed = 5;
+        var playerYspeed = 5;
+        const PLAYER_SIZE = 50;
+        var score = 0;
+        
+        
+        
+
+        //key vars 
+        var leftKeyPress = false;
+        var rightKeyPress = false;
+        var upKeyPress = false;
+        var downKeyPress = false;
+
+        const LEFT_KEY = 65;
+        const RIGHT_KEY = 68;
+        const UP_KEY = 87;
+        const DOWN_KEY = 83;
+        const hardMode = 13;
+        
+        //enemy array and sprite
+        var enemies = [];
+        var enemy = new Image();
+        enemy.src = 'Sprites/sprite1.png';
+        
+        
+        //player array and sprite
+        var player = new Image();
+        player.src = 'Sprites/player1.png';
+
+        //background sprite
+        var background1 = new Image();
+        background1.src = 'Sprites/background1.png'
+        
+    
+        var starting = true;
+        
+        
+        
+        
+        function mainloop() {
+             drawImg(background1,0 , 0, canvas.width, canvas.height ); // bg
+            drawImg(player, playerXpos, playerYpos, PLAYER_SIZE, PLAYER_SIZE)//player sprite render
+            
+            
+
+
+            if (starting) {
+                eXpos = canvas.width / 2;
+                for (var i = 0; i < 16; i++)
+                    makeEnemy();
+                starting = false;
+                alert('click to start , wasd is move ')//start is alert 
+                 
+            }
+
+            playerMove();
+            enemyMove();
+            drawEnemy();
+            hit();
+           hard();
+            
+            
+       
+        }
+
+        function drawEnemy() {
+            enemies.forEach(function(e, i, array) {
+             drawImg(enemy,e.enemyXpos,e.enemyYpos,e.ENEMY_SIZE,e.ENEMY_SIZE);
+            });
+        }//end func drawEnemy
+        
+        function drawImg(src,x,y,w,h){
+canvasContext.drawImage(src,x,y,w,h);
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+        function makeEnemy() {
+            var ENEMY_SIZE = 20;
+            var enemyXpos = Math.floor(Math.random() * (canvas.width - ENEMY_SIZE));//enemys will not spawn off-screen
+            var enemyYpos = 0;
+            var enemyXspeed = 5;
+            var enemyYspeed = 5;
+
+            var enemy = {
+                enemyYpos: enemyYpos,
+                enemyXpos: enemyXpos,
+                ENEMY_SIZE: ENEMY_SIZE,
+                enemyXspeed: enemyXspeed,
+                enemyYspeed: enemyYspeed,
+
+            }
+            enemies.push(enemy);
+        }//end func makeEnemy
+
+        function enemyMove() {//enemy move down 
+            enemies.forEach(function(e, i, array) {
+
+                e.enemyYpos += e.enemyYspeed;
+                if (e.enemyYpos > canvas.height) {
+                    e.enemyYpos = 0
+                    e.enemyYspeed = Math.floor(Math.random() * (10 - 3) + 3);
+                    e.enemyXpos = Math.floor(Math.random() * (canvas.width- e.ENEMY_SIZE));
+                    score = score += 1;// adds score each time tyler his the bottem of the canvas
+                    
+            
+                }
+                
+                
+            });  
+            
+        }//end func enemyMove
+        
+      
+        function keyPressed(evt) {
+            if (evt.keyCode == LEFT_KEY) {
+                leftKeyPress = true;
+
+            }
+            if (evt.keyCode == RIGHT_KEY) {
+                rightKeyPress = true;
+
+            }
+            if (evt.keyCode == UP_KEY) {
+                  upKeyPress = true;
+
+            }
+            if (evt.keyCode == DOWN_KEY) {
+                downKeyPress = true;
+
+            }
+        }
+        
+   
+        function keyReleased(evt) {
+            if (evt.keyCode == LEFT_KEY) {
+                leftKeyPress = false;
+
+            }
+            if (evt.keyCode == RIGHT_KEY) {
+                rightKeyPress = false;
+
+            }
+            if (evt.keyCode == UP_KEY) {
+                upKeyPress = false;
+
+            }
+            if (evt.keyCode == DOWN_KEY) {
+                downKeyPress = false;
+
+            }
+        }
+
+        function colorRect(x, y, w, h, c) {
+            canvasContext.fillStyle = c;
+            canvasContext.fillRect(x, y, w, h);
+        }
+
+        function playerMove() {//player movments
+            if (leftKeyPress && playerXpos > 0) {
+                playerXpos -= playerXspeed;
+            }
+            if (rightKeyPress && playerXpos < canvas.width - PLAYER_SIZE) {
+                playerXpos += playerXspeed;
+
+            }
+            if (upKeyPress && playerYpos > 0) {
+                playerYpos -= playerYspeed;
+            }
+
+            if (downKeyPress && playerYpos < canvas.height - PLAYER_SIZE) {
+                playerYpos += playerYspeed;
+            }
+        }
+        
+          
+  function hit() {enemies.forEach(function(e, i, array) {//enemy reloads page when player is touched
+                if (e.enemyXpos + e.ENEMY_SIZE > playerXpos && e.enemyXpos < playerXpos + PLAYER_SIZE && e.enemyYpos + e
+                    .ENEMY_SIZE > playerYpos && e.enemyYpos < playerYpos + PLAYER_SIZE) {
+                   
+                    setTimeout(function(){ alert(' You died ' + userName +  ' your score was ' + score )  }, 9);
+                      setTimeout(function(){ location.reload(); }, 10);
+                    
+                     
+                };
+            });
+        }//when player is touching enemy , the page will reload , this is the end screen
+        
+        
+        
+function hard(){
+if(score > 20){
+   PLAYER_SIZE = 80;
+   }
+}
+    
+        
+        
+  
+   
+        
+       
+        
+        
+
+    </script>
+    
+</body>
