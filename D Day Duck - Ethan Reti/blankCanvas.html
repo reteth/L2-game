@@ -1,0 +1,268 @@
+<!doctype html>
+
+<body>
+    <canvas id="gameCanvas" width="900" height="600"></canvas>
+    <script>
+        var canvas, canvasContext;
+
+        window.onload = function () {
+            canvas = document.getElementById('gameCanvas');
+            canvasContext = canvas.getContext('2d');
+
+            document.addEventListener('keydown', keyPressed);
+            document.addEventListener('keyup', keyReleased);
+
+            setInterval(mainloop, 1000 / 50);
+        }
+
+
+
+        var userName = '';
+        while (userName == '' || userName == null) {
+            userName = prompt('whats your name?, enter name as "hard" to enable hard mode')
+        }
+
+
+
+
+        //player vars
+        var playerXpos = 200;
+        var playerYpos = 370;
+        var playerXspeed = 5;
+        var playerYspeed = 5;
+        var PLAYER_SIZE = 50;
+        var score = 0;
+
+        //explotion vars
+        var bombXpos = 1000;
+        var bombYpos = 570;
+        var BOMB_SIZE = 30;
+
+
+        //key vars 
+        var leftKeyPress = false;
+        var rightKeyPress = false;
+        var upKeyPress = false;
+        var downKeyPress = false;
+
+        const LEFT_KEY = 65;
+        const RIGHT_KEY = 68;
+        const UP_KEY = 87;
+        const DOWN_KEY = 83;
+        const hardMode = 13;
+
+        //enemy array and sprite
+        var enemies = [];
+        var enemy = new Image();
+        enemy.src = 'Sprites/sprite1.png';
+
+
+        //player array and sprite
+        var player = new Image();
+        player.src = 'Sprites/player2.png';
+
+        //background sprite
+        var background1 = new Image();
+        background1.src = 'Sprites/background1.png'
+
+        //bullet explotion
+        var bomb1 = new Image();
+        bomb1.src = "Sprites/bomb.png"
+
+
+        var starting = true;
+
+
+        function mainloop() {
+            drawImg(background1, 0, 0, canvas.width, canvas.height); // bg
+            drawImg(player, playerXpos, playerYpos, PLAYER_SIZE, PLAYER_SIZE) //player sprite render
+            drawImg(bomb1, bombXpos, bombYpos, BOMB_SIZE, BOMB_SIZE)
+
+            if (starting) {
+                eXpos = canvas.width / 2;
+                for (var i = 0; i < 16; i++)
+                    makeEnemy();
+                starting = false;
+                alert('click to start , wasd is move') //start is alert and click the alert to begin
+
+            }
+
+            playerMove();
+            enemyMove();
+            drawEnemy();
+            hit();
+            hard();
+            dev();
+
+
+        }
+
+        function drawEnemy() {
+            enemies.forEach(function (e, i, array) {
+                drawImg(enemy, e.enemyXpos, e.enemyYpos, e.ENEMY_SIZE, e.ENEMY_SIZE);
+            });
+        } //end func drawEnemy
+
+        function drawImg(src, x, y, w, h) {
+            canvasContext.drawImage(src, x, y, w, h);
+        }
+
+        function makeEnemy() {
+            var ENEMY_SIZE = 20;
+            var enemyXpos = Math.floor(Math.random() * (canvas.width - ENEMY_SIZE)); //enemys will not spawn off-screen
+            var enemyYpos = 0;
+            var enemyXspeed = 5;
+            var enemyYspeed = 5;
+
+            var enemy = {
+                enemyYpos: enemyYpos,
+                enemyXpos: enemyXpos,
+                ENEMY_SIZE: ENEMY_SIZE,
+                enemyXspeed: enemyXspeed,
+                enemyYspeed: enemyYspeed,
+            }
+            enemies.push(enemy);
+        } //end func makeEnemy
+
+        function enemyMove() { //enemy move down 
+            enemies.forEach(function (e, i, array) {
+
+                e.enemyYpos += e.enemyYspeed;
+                if (e.enemyYpos > canvas.height) {
+                    e.enemyYpos = 0
+                    e.enemyYspeed = Math.floor(Math.random() * (10 - 3) + 3);
+                    e.enemyXpos = Math.floor(Math.random() * (canvas.width - e.ENEMY_SIZE));
+                    score = score += 1; // adds score each time a bullet hits the bottem of the canvas
+                    e.enemyYspeed += 1;
+                    bombXpos = e.enemyXpos;
+
+                }
+
+
+            });
+
+        } //end func enemyMove
+
+
+        function keyPressed(evt) {
+            if (evt.keyCode == LEFT_KEY) {
+                leftKeyPress = true;
+
+            }
+            if (evt.keyCode == RIGHT_KEY) {
+                rightKeyPress = true;
+
+            }
+            if (evt.keyCode == UP_KEY) {
+                upKeyPress = true;
+
+            }
+            if (evt.keyCode == DOWN_KEY) {
+                downKeyPress = true;
+
+            }
+        }
+
+
+        function keyReleased(evt) {
+            if (evt.keyCode == LEFT_KEY) {
+                leftKeyPress = false;
+
+            }
+            if (evt.keyCode == RIGHT_KEY) {
+                rightKeyPress = false;
+
+            }
+            if (evt.keyCode == UP_KEY) {
+                upKeyPress = false;
+
+            }
+            if (evt.keyCode == DOWN_KEY) {
+                downKeyPress = false;
+
+            }
+        }
+
+        function colorRect(x, y, w, h, c) {
+            canvasContext.fillStyle = c;
+            canvasContext.fillRect(x, y, w, h);
+        }
+
+        function playerMove() { //player movments dont go outsidew bordr
+            if (leftKeyPress && playerXpos > 0) {
+                playerXpos -= playerXspeed;
+            }
+            if (rightKeyPress && playerXpos < canvas.width - PLAYER_SIZE) {
+                playerXpos += playerXspeed;
+
+            }
+            if (upKeyPress && playerYpos > 0) {
+                playerYpos -= playerYspeed;
+            }
+
+            if (downKeyPress && playerYpos < canvas.height - PLAYER_SIZE) {
+                playerYpos += playerYspeed;
+            }
+        }
+
+
+        function hit() {
+            enemies.forEach(function (e, i, array) { //enemy reloads page when player is touched
+                if (e.enemyXpos + e.ENEMY_SIZE > playerXpos && e.enemyXpos < playerXpos + PLAYER_SIZE && e
+                    .enemyYpos + e
+                    .ENEMY_SIZE > playerYpos && e.enemyYpos < playerYpos + PLAYER_SIZE) {
+
+                    setTimeout(function () {
+                        alert(' You died ' + userName + ' your score was ' + score)
+                    }, 9);
+                    setTimeout(function () {
+                        location.reload();
+                    }, 10);
+
+
+                };
+            });
+        } //when player is touching enemy , the page will reload , this is the end screen/ lose screen and not the win screen as the player cannot win.
+
+
+        function hard() {
+            if (score > 50) {
+                PLAYER_SIZE = 60;
+            }
+
+            if (score > 150) {
+                PLAYER_SIZE = 80;
+            }
+        } //when the score reaches a cerntan thereshhold the size of the player increases acordingly 
+
+        function scoreboard(){
+
+        }
+        
+
+        function dev() { //cheats that can be activated by entering your name
+            if (userName == "small") {
+                PLAYER_SIZE = 20;
+            }
+            if (userName == "fast") {
+                playerXspeed = 12;
+                playerYspeed = 12;
+            }
+            if (userName == "tyler") {
+                PLAYER_SIZE = 150;
+            }
+            if (userName == "nigga") {
+                PLAYER_SIZE = 150;
+            }
+            if (userName == "hard") {
+                playerXspeed = 2;
+                playerYspeed = 2;
+
+            }
+            if (userName == "kiedus"){
+                PLAYER_SIZE = 10;
+            }
+        }
+    </script>
+
+</body>
