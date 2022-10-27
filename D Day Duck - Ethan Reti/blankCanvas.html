@@ -19,8 +19,14 @@
 
         var userName = '';
         while (userName == '' || userName == null) {
-            userName = prompt('whats your name?, enter name as "hard" to enable hard mode')
+            userName = prompt('whats your name?')
         }
+
+        var mode = '';
+        while (mode == '' || mode == null) {
+            mode = prompt('Type the mode you wish to play, The dificalty changes your movment speed, Easy or hard, if neither is typed the game will default to easy')
+        }
+
 
 
 
@@ -49,7 +55,7 @@
         const RIGHT_KEY = 68;
         const UP_KEY = 87;
         const DOWN_KEY = 83;
-        const hardMode = 13;
+        
 
         //enemy array and sprite
         var enemies = [];
@@ -69,7 +75,8 @@
         var bomb1 = new Image();
         bomb1.src = "Sprites/bomb.png"
 
-
+        var dMode = 7;
+        var alerted = false;
         var starting = true;
 
 
@@ -83,8 +90,9 @@
                 for (var i = 0; i < 16; i++)
                     makeEnemy();
                 starting = false;
-                alert('click to start , wasd is move') //start is alert and click the alert to begin
-
+                alert('You have selected ' + mode )
+                alert('click the OK button to start or press enter, W key to move up, A key to move left, D key to move right and S key to move down') //start is alert and click the alert to begin
+                alert('The goal of the game is to dodge bullets and get a high score')
             }
 
             playerMove();
@@ -92,7 +100,8 @@
             drawEnemy();
             hit();
             hard();
-            dev();
+            
+            hardMode();
 
 
         }
@@ -130,7 +139,7 @@
                 e.enemyYpos += e.enemyYspeed;
                 if (e.enemyYpos > canvas.height) {
                     e.enemyYpos = 0
-                    e.enemyYspeed = Math.floor(Math.random() * (10 - 3) + 3);
+                    e.enemyYspeed = Math.floor(Math.random() * (dMode - 3) + 3);
                     e.enemyXpos = Math.floor(Math.random() * (canvas.width - e.ENEMY_SIZE));
                     score = score += 1; // adds score each time a bullet hits the bottem of the canvas
                     e.enemyYspeed += 1;
@@ -205,6 +214,12 @@
             }
         }
 
+        function hardMode(){
+            if(mode == "hard"){
+                dMode = 15;
+            }
+        }
+
 
         function hit() {
             enemies.forEach(function (e, i, array) { //enemy reloads page when player is touched
@@ -212,14 +227,17 @@
                     .enemyYpos + e
                     .ENEMY_SIZE > playerYpos && e.enemyYpos < playerYpos + PLAYER_SIZE) {
 
-                    setTimeout(function () {
-                        alert(' You died ' + userName + ' your score was ' + score)
-                    }, 9);
-                    setTimeout(function () {
+                        if(alerted == false){
+                            alert(' You died ' + userName + ' your score was ' + score + " you were playing on " + mode);
+                            alerted = true;
+                            
+                        }
+                         if(alerted == true){
                         location.reload();
-                    }, 10);
-
-
+                         }
+                        
+                        
+                        
                 };
             });
         } //when player is touching enemy , the page will reload , this is the end screen/ lose screen and not the win screen as the player cannot win.
@@ -240,29 +258,7 @@
         }
         
 
-        function dev() { //cheats that can be activated by entering your name
-            if (userName == "small") {
-                PLAYER_SIZE = 20;
-            }
-            if (userName == "fast") {
-                playerXspeed = 12;
-                playerYspeed = 12;
-            }
-            if (userName == "tyler") {
-                PLAYER_SIZE = 150;
-            }
-            if (userName == "nigga") {
-                PLAYER_SIZE = 150;
-            }
-            if (userName == "hard") {
-                playerXspeed = 2;
-                playerYspeed = 2;
-
-            }
-            if (userName == "kiedus"){
-                PLAYER_SIZE = 10;
-            }
-        }
+        
     </script>
 
 </body>
